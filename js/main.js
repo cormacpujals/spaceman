@@ -5,13 +5,12 @@
 // based on length of word: minutes of oxygen remaining
 // if correct # guesses < the length of the word, then the user must guess ->
 // while minutes remaining > 0
-// minutes remaining i-- upon incorrect guess and at 0, gameover 
+// minutes remaining i-- upon incorrect guess and at 0, gameover
 // show gameover sequence (message, audio(?))
-// if correct # guesses === length of the word, mission success! 
+// if correct # guesses === length of the word, mission success!
 
 
 /*----- constants -----*/
-
 
 /*----- state variables -----*/
 // alphabet (alphanumeric?? some moons have #s... may omit)
@@ -34,7 +33,7 @@
 
 // render()
 
-// renderAlphabetBoard() 
+// renderAlphabetBoard()
 
 // renderMessage()
 
@@ -50,4 +49,3 @@
   // render()
 
 //missionOutcome()
-  
