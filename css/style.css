@@ -1,8 +1,27 @@
 * {
   box-sizing: border-box;
+
 }
 
-.alphabet > div {
-  width: 100vw;
-  display: flex;
+
+h1, h4, .terminal, .btn, .container > button{
+  background-color: black;
+  color: white;
 }
+
+h1 {
+  text-align: center;
+}
+
+h4 {
+  margin: 20px;
+}
+
+body {
+  background-image: url("https://images.unsplash.com/photo-1621198777376-d776b7725a93?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1035&q=80");
+  background-position: center center;
+  background-size: 100% 100%;
+  height: 100vh;
+}
+
+
