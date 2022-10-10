@@ -12,6 +12,7 @@
 
 /*----- constants -----*/
 
+// not currently using
 const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                   'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
                   'y', 'z'];
@@ -44,7 +45,7 @@ let passcodeBoard;  // sets up "board" to display # characters in word (and even
                     // = [];
 
 let missionOutcome; // 'Mission Success!' or 'Mission Failure' mission success
-                    // if guesses[correct] = passcode.length
+                    // if guesses[correct].length = passcode.length
 
 /*----- cached elements  -----*/
 
@@ -83,7 +84,7 @@ function render() {
 }
 
 function renderPasscode() {
-  return moons[Math.floor(Math.random() * moons.length)].split('');
+  return moons[Math.floor(Math.random() * moons.length)].toUpperCase().split('');
 }
 
 function renderPasscodeBoard() {
