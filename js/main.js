@@ -5,7 +5,7 @@
 // based on length of word: minutes of oxygen remaining
 // if correct # guesses < the length of the word, then the user must guess ->
 // while minutes remaining > 0
-// minutes remaining i-- upon incorrect guess and at 0, gameover
+// minutes remaining i-- upon incorrect guess and at 0, game over
 // show game over sequence (message, audio(?))
 // if correct # guesses === length of the word, mission success!
 
@@ -30,8 +30,8 @@ const moons = ['Io', 'Europa', 'Ganymede', 'Adrastea', 'Aitne', 'Amalthea',
 /*----- state variables -----*/
 
 let guesses;        // = {
-                    //   correct: 0,  guesses (when correct guesses = passcode.length => win)
-                    //   wrong: 0,
+                    //   correct: [],  guesses (when correct.length = passcode.length => win)
+                    //   wrong: [], lose when wrong.length = maxWrong
                     // }
 
 let maxWrong;       // do I want to generate this dynamically based off # characters?
@@ -48,11 +48,13 @@ let missionOutcome; // 'Mission Success!' or 'Mission Failure' mission success
 
 /*----- cached elements  -----*/
 
-// play/reset button
+const playBtn = document.querySelector('.play');
 
 
 /*----- event listeners -----*/
 
+document.getElementById('alphabet').addEventListener('click', letterSelect);
+playBtn.addEventListener('click', init);
 // alphabet click, but needs to be able to ignore repeated clicks
 // audio
 // play/reset
@@ -63,11 +65,11 @@ init();
 
 function init() {
   guesses = {
-    correct: 0,
-    wrong: 0,
+    correct: [],
+    wrong: [],
   };
   maxWrong = 6;
-  passcode = moons[Math.floor(Math.random() * moons.length)];
+  passcode = renderPasscode();
   passcodeBoard = '';
   missionOutcome = 'Mission in progress';
   render();
@@ -80,26 +82,34 @@ function render() {
   letterSelect();
 }
 
-function renderPasscodeBoard() {
+function renderPasscode() {
+  return moons[Math.floor(Math.random() * moons.length)].split('');
+}
 
+function renderPasscodeBoard() {
+ // want to render underscores that represent the number of letters in passcode
 }
 
 function renderMessage() {
-
+  //
 }
 
 function renderControls() {
 
 }
 
-function letterSelect() {
+function letterSelect(evt) {
+  const letterIdx = evt.target.id;
+  console.log(letterIdx);
   // guards
     // clicks outside of board
     // clicks letter already chosen
   // updates state
   // num guesses left
-  // missionOutcome()
-  // render()
+  missionOutcome = getMissionOutcome();
+  render()
 }
 
-//missionOutcome()
+function getMissionOutcome() {
+
+}
