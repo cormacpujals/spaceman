@@ -1,0 +1,8 @@
+* {
+  box-sizing: border-box;
+}
+
+.alphabet > div {
+  width: 100vw;
+  display: flex;
+}

@@ -6,7 +6,7 @@
 // if correct # guesses < the length of the word, then the user must guess ->
 // while minutes remaining > 0
 // minutes remaining i-- upon incorrect guess and at 0, gameover
-// show gameover sequence (message, audio(?))
+// show game over sequence (message, audio(?))
 // if correct # guesses === length of the word, mission success!
 
 
