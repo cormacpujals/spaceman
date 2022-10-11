@@ -1,23 +1,24 @@
 /*----- constants -----*/
 
-const moons = ['Io', 'Europa', 'Ganymede', 'Adrastea', 'Aitne', 'Amalthea',
-               'Ananke', 'Arche', 'Autonoe', 'Aoede', 'Callirrhoe', 'Callisto',
-               'Carme', 'Carpo', 'Chaldene', 'Cyllene', 'Dia', 'Eirene',
-               'Elara', 'Erinome', 'Ersa', 'Euanthe', 'Eukelade', 'Eupheme',
-               'Euporie', 'Eurydome', 'Harpalyke', 'Hegemone', 'Helike',
-               'Hermippe', 'Herse', 'Himalia', 'Iocaste', 'Isonoe', 'Kale',
-               'Kallichore', 'Kalyke', 'Kore', 'Leda', 'Lysithea', 'Megaclite',
-               'Metis', 'Mneme', 'Orthosie', 'Pandia', 'Pasiphae', 'Pasithee',
-               'Philophrosyne', 'Praxidike', 'Sinope', 'Sponde', 'Taygete',
-               'Thebe', 'Thelxinoe', 'Themisto', 'Thyone', 'Valetudo'];
+const moons = [
+  'Io', 'Europa', 'Ganymede', 'Adrastea', 'Aitne', 'Amalthea', 'Ananke',
+  'Arche', 'Autonoe', 'Aoede', 'Callirrhoe', 'Callisto', 'Carme', 'Carpo',
+  'Chaldene', 'Cyllene', 'Dia', 'Eirene', 'Elara', 'Erinome', 'Ersa', 'Euanthe',
+  'Eukelade', 'Eupheme', 'Euporie', 'Eurydome', 'Harpalyke', 'Hegemone',
+  'Helike', 'Hermippe', 'Herse', 'Himalia', 'Iocaste', 'Isonoe', 'Kale',
+  'Kallichore', 'Kalyke', 'Kore', 'Leda', 'Lysithea', 'Megaclite', 'Metis',
+  'Mneme', 'Orthosie', 'Pandia', 'Pasiphae', 'Pasithee', 'Philophrosyne',
+  'Praxidike', 'Sinope', 'Sponde', 'Taygete', 'Thebe', 'Thelxinoe', 'Themisto',
+  'Thyone', 'Valetudo'
+];
 
 /*----- state variables -----*/
 
 // Our game states.
-const InitialState = "INITIAL";
-const StartState = "START";
-const InPlayState = "IN-PLAY";
-const GameOverState = "GAME-OVER";
+const InitialState = 'INITIAL';
+const StartState = 'START';
+const InPlayState = 'IN-PLAY';
+const GameOverState = 'GAME-OVER';
 
 let state = InitialState;
 
@@ -38,12 +39,12 @@ let status;
 
 // Buffer of keys entered since last cleared.
 let buffer = [];
-let passcode = "";
+let passcode = '';
 /*----- cached elements  -----*/
 
-const activateBtn = document.getElementById("activate");
-timerEl = document.getElementById("timer");
-buttonsEl = document.getElementById("buttons");
+const activateBtn = document.getElementById('activate');
+timerEl = document.getElementById('timer');
+buttonsEl = document.getElementById('buttons');
 
 /*----- event listeners -----*/
 
@@ -55,9 +56,8 @@ activateBtn.addEventListener('click', init);
 /**
  * activate "starts" a new game and requires the user to guess a passcode.
  */
-
 function init() {
-  console.log("starting new game");
+  console.log('starting new game');
   state = StartState; // sets state to StartState
   initializePasscode();
   initializeButtons();
@@ -71,7 +71,7 @@ function endGame() {
 
   state = GameOverState;
   const win = remaining > 0 ? true : false;
-  console.log("Win: " + win); // clear control-panel and say 'MISSION SUCCESS
+  console.log('Win: ' + win); // clear control-panel and say 'MISSION SUCCESS
                               // EMERGENCY RETRIEVAL SYSTEM ACTIVATED'
 }
 
@@ -82,8 +82,8 @@ function initializePasscode() {
 }
 
 function initializeButtons() {
-  const iA = "A".charCodeAt(0);
-  const iZ = "Z".charCodeAt(0);
+  const iA = 'A'.charCodeAt(0);
+  const iZ = 'Z'.charCodeAt(0);
   const chars = [];
 
   for (let i = iA; i <= iZ; i++) {
@@ -91,7 +91,7 @@ function initializeButtons() {
   }
 
   chars.forEach(ch => {
-    const b = document.createElement("button");
+    const b = document.createElement('button');
     b.setAttribute('class', 'btn');
     b.innerText = ch;
     b.addEventListener('click', onPasscodeButton);
@@ -144,27 +144,27 @@ function render() {
   switch (state) {
     case InitialState:
     case StartState:
-      timerEl.setAttribute("class", "timer-normal");
+      timerEl.setAttribute('class', 'timer-normal');
       status = `${remaining} seconds`;
       break;
 
     case InPlayState:
       const seconds = remaining;
-      status = "";
+      status = '';
 
       if (seconds < 16) {
-        timerEl.setAttribute("class", "timer-warning");
+        timerEl.setAttribute('class', 'timer-warning');
       }
 
       if (seconds > 1) {
         status = `${seconds} seconds`;
       } else if (seconds === 1) {
-        status = "1 second";
+        status = '1 second';
       }
       break;
 
     case GameOverState:
-      status = "TIME OUT!";
+      status = 'TIME OUT!';
       break;
 
     default:
