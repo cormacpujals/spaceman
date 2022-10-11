@@ -1,21 +1,4 @@
-//  Pseudo(pseudo)code
-
-// randomly generate from state one of Jupiter's moons
-// display the # of characters of the word
-// based on length of word: minutes of oxygen remaining
-// if correct # guesses < the length of the word, then the user must guess ->
-// while minutes remaining > 0
-// minutes remaining i-- upon incorrect guess and at 0, game over
-// show game over sequence (message, audio(?))
-// if correct # guesses === length of the word, mission success!
-
-
 /*----- constants -----*/
-
-// not currently using
-const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-                  'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-                  'y', 'z'];
 
 const moons = ['Io', 'Europa', 'Ganymede', 'Adrastea', 'Aitne', 'Amalthea',
                'Ananke', 'Arche', 'Autonoe', 'Aoede', 'Callirrhoe', 'Callisto',
@@ -30,87 +13,164 @@ const moons = ['Io', 'Europa', 'Ganymede', 'Adrastea', 'Aitne', 'Amalthea',
 
 /*----- state variables -----*/
 
-let guesses;        // = {
-                    //   correct: [],  guesses (when correct.length = passcode.length => win)
-                    //   wrong: [], lose when wrong.length = maxWrong
-                    // }
+// Our game states.
+const InitialState = "INITIAL";
+const StartState = "START";
+const InPlayState = "IN-PLAY";
+const GameOverState = "GAME-OVER";
 
-let maxWrong;       // do I want to generate this dynamically based off # characters?
+let state = InitialState;
 
-let passcode;       // generates passcode randomly from array of moons
-                    // = moons[Math.floor(Math.random() * moons.length)];
+// Starting timeout until game over.
+const timeout = 1000 * 60;
 
-let passcodeBoard;  // sets up "board" to display # characters in word (and eventually will display
-                    // letters too)
-                    // = [];
+// remaining seconds (not ms), initialized by startGameLoop()
+let remaining;
 
-let missionOutcome; // 'Mission Success!' or 'Mission Failure' mission success
-                    // if guesses[correct].length = passcode.length
+// Update the screen every second.
+const period = 1000;
 
+// Interval created by startGameLoop()
+let timer;
+
+// Status is updated based on the timer
+let status;
+
+// Buffer of keys entered since last cleared.
+let buffer = [];
+let passcode = "";
 /*----- cached elements  -----*/
 
-const playBtn = document.querySelector('.play');
-
+const activateBtn = document.getElementById("activate");
+timerEl = document.getElementById("timer");
+buttonsEl = document.getElementById("buttons");
 
 /*----- event listeners -----*/
 
-document.getElementById('alphabet').addEventListener('click', letterSelect);
-playBtn.addEventListener('click', init);
-// alphabet click, but needs to be able to ignore repeated clicks
-// audio
-// play/reset
+activateBtn.addEventListener('click', init);
+// letter btn listener is in the function that initializes them
 
 /*----- functions -----*/
 
-init();
+/**
+ * activate "starts" a new game and requires the user to guess a passcode.
+ */
 
 function init() {
-  guesses = {
-    correct: [],
-    wrong: [],
-  };
-  maxWrong = 6;
-  passcode = renderPasscode();
-  passcodeBoard = '';
-  missionOutcome = 'Mission in progress';
+  console.log("starting new game");
+  state = StartState; // sets state to StartState
+  initializePasscode();
+  initializeButtons();
+  startGameLoop();
+}
+
+function endGame() {
+  // explicitly dispose timer
+  clearInterval(timer);
+  timer = undefined;
+
+  state = GameOverState;
+  const win = remaining > 0 ? true : false;
+  console.log("Win: " + win); // clear control-panel and say 'MISSION SUCCESS
+                              // EMERGENCY RETRIEVAL SYSTEM ACTIVATED'
+}
+
+function initializePasscode() {
+  // moons[Math.floor(Math.random() * moons.length)].toUpperCase();
+  passcode = moons[0];
+  buffer = [];
+}
+
+function initializeButtons() {
+  const iA = "A".charCodeAt(0);
+  const iZ = "Z".charCodeAt(0);
+  const chars = [];
+
+  for (let i = iA; i <= iZ; i++) {
+    chars.push(String.fromCharCode(i));
+  }
+
+  chars.forEach(ch => {
+    const b = document.createElement("button");
+    b.setAttribute('class', 'btn');
+    b.innerText = ch;
+    b.addEventListener('click', onPasscodeButton);
+    buttonsEl.appendChild(b);
+  });
+}
+
+function onPasscodeButton(evt) {
+  const btn = evt.target;
+  const ch = btn.innerText;
+
+  buffer.push(ch);
+
+  const buf = buffer.join('');
+  const pc = passcode.toUpperCase();
+  console.log(`${buf} === ${pc} => ${buf === pc}`);
+
+  if (buf === pc) {
+    endGame();
+  }
+}
+
+/**
+ * The game loop runs until either
+ * -the player guesses the correct passcode and ends the game
+ * -the timer times out
+ * render updates the state determined by game loop
+ */
+function startGameLoop() {
+  // console.log("starting new countdown");
+  remaining = timeout / 1000; // display seconds
   render();
+
+  // Enter InPlayState and start game loop.
+  state = InPlayState;
+  timer = setInterval(() => {
+    --remaining;
+    // console.log("seconds remaining:", remaining);
+    if (remaining <= 0) {
+      endGame();
+    }
+    render();
+  }, period);
 }
 
+/**
+ * Updates UI to reflect current state (set by startGameLoop)
+ */
 function render() {
-  renderPasscodeBoard();
-  renderMessage();
-  renderControls();
-  letterSelect();
-}
+  switch (state) {
+    case InitialState:
+    case StartState:
+      timerEl.setAttribute("class", "timer-normal");
+      status = `${remaining} seconds`;
+      break;
 
-function renderPasscode() {
-  return moons[Math.floor(Math.random() * moons.length)].toUpperCase().split('');
-}
+    case InPlayState:
+      const seconds = remaining;
+      status = "";
 
-function renderPasscodeBoard() {
- // want to render underscores that represent the number of letters in passcode
-}
+      if (seconds < 16) {
+        timerEl.setAttribute("class", "timer-warning");
+      }
 
-function renderMessage() {
-  //
-}
+      if (seconds > 1) {
+        status = `${seconds} seconds`;
+      } else if (seconds === 1) {
+        status = "1 second";
+      }
+      break;
 
-function renderControls() {
+    case GameOverState:
+      status = "TIME OUT!";
+      break;
 
-}
+    default:
+      console.error(`ERROR: unknown state: ${state}`);
+  }
 
-function letterSelect(evt) {
-  const letterIdx = evt.target.id;
-  console.log(letterIdx);
-  // guards
-    // clicks outside of board
-    // clicks letter already chosen
-  // updates state
-  // num guesses left
-  missionOutcome = getMissionOutcome();
-  render()
-}
-
-function getMissionOutcome() {
-
+  // update time remaining display
+  timerEl.textContent = status;
 }

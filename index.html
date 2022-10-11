@@ -12,46 +12,24 @@
 <body>
   <main>
     <h1>SPACEMAN</h1>
-    <h4>A rouge asteroid has left your fellow astronaut unconscious,
-      and they only have minutes of oxygen left. Your mission is to activate
-      the emergency retrieval system via passcode before they run out of oxygen.
-       <! I want this to include all hidden/visible messages (mission, game over,
-      mission success, mission failure >
+    <h4>MISSION SIMULATION: A rogue asteroid has left your fellow astronaut
+      unconscious, and they only have minutes of oxygen left. Your mission is to
+      activate the emergency retrieval system by keying in the passcode before
+      they run out of oxygen. Each incorrect guess will decrement the timer by
+      10 seconds.
     </h4>
-    <h1 id="img">IMAGE WILL GO HERE</h1>
-    <div class="terminal">
 
-      <div>ENTER PASSCODE BELOW: </div>
-      <div id="alphabet">
-        <button id="A" class="btn">A</button>
-        <button id="B" class="btn">B</button>
-        <button id="C" class="btn">C</button>
-        <button id="D" class="btn">D</button>
-        <button id="E" class="btn">E</button>
-        <button id="F" class="btn">F</button>
-        <button id="G" class="btn">G</button>
-        <button id="H" class="btn">H</button>
-        <button id="I" class="btn">I</button>
-        <button id="J" class="btn">J</button>
-        <button id="K" class="btn">K</button>
-        <button id="L" class="btn">L</button>
-        <button id="M" class="btn">M</button>
-        <button id="N" class="btn">N</button>
-        <button id="O" class="btn">O</button>
-        <button id="P" class="btn">P</button>
-        <button id="Q" class="btn">Q</button>
-        <button id="R" class="btn">R</button>
-        <button id="S" class="btn">S</button>
-        <button id="T" class="btn">T</button>
-        <button id="U" class="btn">U</button>
-        <button id="V" class="btn">V</button>
-        <button id="W" class="btn">W</button>
-        <button id="X" class="btn">X</button>
-        <button id="Y" class="btn">Y</button>
-        <button id="Z" class="btn">Z</button>
+    <h1 id="img">IMAGE WILL GO HERE</h1>
+
+    <div id="control-panel">
+      <div id="mode">
+        <span>EMERGENCY RETRIEVAL SYSTEM</span><span class="timer-normal" id="timer"></span>
       </div>
+      <div id="instruction">Enter override passcode to activate:</div>
+      <div id="buttons"></div>
     </div>
+
   </main>
-  <button class="play">Play</button>
+  <button id="activate">Activate</button>
 </body>
 </html>
