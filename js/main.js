@@ -14,11 +14,18 @@ const moons = [
 
 /*----- state variables -----*/
 
-// Our game states.
+// Our game states. Set states with setState().
 const InitialState = 'INITIAL';
 const StartState = 'START';
 const InPlayState = 'IN-PLAY';
 const GameOverState = 'GAME-OVER';
+
+const stateTransitions = {
+  [InitialState]: [StartState],
+  [StartState]: [InPlayState],
+  [InPlayState]: [GameOverState],
+  [GameOverState]: [InitialState],
+}
 
 let state = InitialState;
 
@@ -43,8 +50,8 @@ let passcode = '';
 /*----- cached elements  -----*/
 
 const activateBtn = document.getElementById('activate');
-timerEl = document.getElementById('timer');
-buttonsEl = document.getElementById('buttons');
+const timerEl = document.getElementById('timer');
+const buttonsEl = document.getElementById('buttons');
 
 /*----- event listeners -----*/
 
@@ -58,7 +65,6 @@ activateBtn.addEventListener('click', init);
  */
 function init() {
   console.log('starting new game');
-  state = StartState; // sets state to StartState
   initializePasscode();
   initializeButtons();
   startGameLoop();
@@ -69,7 +75,7 @@ function endGame() {
   clearInterval(timer);
   timer = undefined;
 
-  state = GameOverState;
+  setState(GameOverState);
   const win = remaining > 0 ? true : false;
   console.log('Win: ' + win); // clear control-panel and say 'MISSION SUCCESS
                               // EMERGENCY RETRIEVAL SYSTEM ACTIVATED'
@@ -121,12 +127,12 @@ function onPasscodeButton(evt) {
  * render updates the state determined by game loop
  */
 function startGameLoop() {
-  // console.log("starting new countdown");
+  setState(StartState);
   remaining = timeout / 1000; // display seconds
   render();
 
   // Enter InPlayState and start game loop.
-  state = InPlayState;
+  setState(InPlayState);
   timer = setInterval(() => {
     --remaining;
     // console.log("seconds remaining:", remaining);
@@ -173,4 +179,16 @@ function render() {
 
   // update time remaining display
   timerEl.textContent = status;
+}
+
+/**
+ * Ensure valid state transitions.
+ * @param newState
+ */
+function setState(newState) {
+  if (stateTransitions[state].includes(newState)) {
+    state = newState;
+  } else {
+    throw new Error(`ERROR: invalid state transition attempted from ${state} to ${newState}`);
+  }
 }
