@@ -197,7 +197,7 @@ function setState(newState) {
 
 /*----- Input Buffer Display -----*/
 
-const input = [];
+
 const passcodeEl = document.getElementById('passcode');
 
 function initializePasscodeDisplay(passcode) {
