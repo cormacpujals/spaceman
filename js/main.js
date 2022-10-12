@@ -42,7 +42,7 @@ let passcode;
 
 /** The game timer (reset for each new game). */
 let timer = {
-  maxTime: 1000 * 60, // total game length (ms).
+  maxTime: 1000 * 120, // total game length (ms).
   period: 1000, // how often the game updates and renders (ms).
   remaining: undefined, // time remaining until game ends (seconds).
   intervalId: undefined, // the interval timer ID
@@ -147,7 +147,7 @@ function endGame() {
   timer.intervalId = undefined;
 
   setState(GameState.GAME_OVER);
-  const win = timer.remaining > 0 ? true : false;
+  const win = timer.remaining > 0;
   console.log('Win: ' + win);
 
   render();
