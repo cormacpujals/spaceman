@@ -1,0 +1,12 @@
+#!/bin/bash
+set -eu
+
+MSG=$1
+BRANCH=$(git branch --show-current)
+
+git add .
+git commit -m $MSG
+git checkout main
+git merge $BRANCH
+git push origin main
+git checkout $BRANCH
