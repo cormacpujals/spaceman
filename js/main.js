@@ -72,7 +72,7 @@ activateBtn.addEventListener('click', init);
  * activate "starts" a new game and requires the user to guess a passcode.
  */
 function init() {
-  console.log('Starting new game');
+  console.log('Initializing new game');
   setState(GameState.INITIAL);
 
   // Initialize game state.
@@ -98,6 +98,44 @@ function init() {
 
   // Transition to play state now.
   setState(GameState.IN_PLAY);
+}
+
+/**
+ * Update UI to reflect current state.
+ */
+function render() {
+  switch (state) {
+    case GameState.INITIAL:
+    case GameState.START:
+      timerEl.setAttribute('class', 'timer-normal');
+      status = `${timer.remaining} seconds`;
+      break;
+
+    case GameState.IN_PLAY:
+      const seconds = timer.remaining;
+      status = '';
+
+      if (seconds < 16) {
+        timerEl.setAttribute('class', 'timer-warning');
+      }
+
+      if (seconds > 1) {
+        status = `${seconds} seconds`;
+      } else if (seconds === 1) {
+        status = '1 second';
+      }
+      break;
+
+    case GameState.GAME_OVER:
+      status = 'TIME OUT!';
+      break;
+
+    default:
+      console.error(`ERROR: unknown state: ${state}`);
+  }
+
+  // update time remaining display
+  timerEl.textContent = status;
 }
 
 /**
@@ -164,44 +202,6 @@ function onPasscodeButton(evt) {
   if (cur === passcode) {
     endGame();
   }
-}
-
-/**
- * Update UI to reflect current state.
- */
-function render() {
-  switch (state) {
-    case GameState.INITIAL:
-    case GameState.START:
-      timerEl.setAttribute('class', 'timer-normal');
-      status = `${timer.remaining} seconds`;
-      break;
-
-    case GameState.IN_PLAY:
-      const seconds = timer.remaining;
-      status = '';
-
-      if (seconds < 16) {
-        timerEl.setAttribute('class', 'timer-warning');
-      }
-
-      if (seconds > 1) {
-        status = `${seconds} seconds`;
-      } else if (seconds === 1) {
-        status = '1 second';
-      }
-      break;
-
-    case GameState.GAME_OVER:
-      status = 'TIME OUT!';
-      break;
-
-    default:
-      console.error(`ERROR: unknown state: ${state}`);
-  }
-
-  // update time remaining display
-  timerEl.textContent = status;
 }
 
 /**
