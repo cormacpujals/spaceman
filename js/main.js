@@ -148,8 +148,8 @@ function endGame() {
 
   setState(GameState.GAME_OVER);
   const win = timer.remaining > 0 ? true : false;
-  console.log('Win: ' + win); // clear control-panel and say 'MISSION SUCCESS
-                              // EMERGENCY RETRIEVAL SYSTEM ACTIVATED'
+  console.log('Win: ' + win);
+
   render();
 }
 
