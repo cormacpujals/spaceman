@@ -27,7 +27,7 @@ const stateTransitions = {
   [GameOverState]: [InitialState],
 }
 
-let state = InitialState;
+let state;
 
 // Starting timeout until game over.
 const timeout = 1000 * 60;
@@ -38,15 +38,15 @@ let remaining;
 // Update the screen every second.
 const period = 1000;
 
-// Interval created by startGameLoop()
+// Interval created by startGameLoop().
 let timer;
 
-// Status is updated based on the timer
+// Status is updated based on the timer.
 let status;
 
-// Buffer of keys entered since last cleared.
-let buffer = [];
+// Passcode updated for each new round.
 let passcode = '';
+
 /*----- cached elements  -----*/
 
 const activateBtn = document.getElementById('activate');
@@ -65,7 +65,9 @@ activateBtn.addEventListener('click', init);
  */
 function init() {
   console.log('starting new game');
+  setState(InitialState);
   initializePasscode();
+  initializePasscodeDisplay(passcode);
   initializeButtons();
   startGameLoop();
 }
@@ -82,12 +84,13 @@ function endGame() {
 }
 
 function initializePasscode() {
-  // moons[Math.floor(Math.random() * moons.length)].toUpperCase();
-  passcode = moons[0];
-  buffer = [];
+  passcode = moons[Math.floor(Math.random() * moons.length)].toUpperCase();
 }
 
 function initializeButtons() {
+  // Don't need to reinitialize if already created.
+  // if (buttonsEl.children) return;
+
   const iA = 'A'.charCodeAt(0);
   const iZ = 'Z'.charCodeAt(0);
   const chars = [];
@@ -109,13 +112,11 @@ function onPasscodeButton(evt) {
   const btn = evt.target;
   const ch = btn.innerText;
 
-  buffer.push(ch);
+  setPasscodeDisplay(ch.toUpperCase());
+  let cur = readPasscodeDisplay();
+  console.log(`${cur} === ${passcode} => ${cur === passcode}`);
 
-  const buf = buffer.join('');
-  const pc = passcode.toUpperCase();
-  console.log(`${buf} === ${pc} => ${buf === pc}`);
-
-  if (buf === pc) {
+  if (cur === passcode) {
     endGame();
   }
 }
@@ -186,9 +187,59 @@ function render() {
  * @param newState
  */
 function setState(newState) {
+  if (!state) state = GameOverState;
+
   if (stateTransitions[state].includes(newState)) {
     state = newState;
   } else {
     throw new Error(`ERROR: invalid state transition attempted from ${state} to ${newState}`);
   }
+}
+
+/*----- Input Buffer Display -----*/
+
+const input = [];
+const passcodeEl = document.getElementById('passcode');
+
+function initializePasscodeDisplay(passcode) {
+  // if (passcodeEl.children) passcodeEl.children = [];
+
+  for (let i = 0; i < passcode.length; i++) {
+    const el = document.createElement('button');
+    el.setAttribute('class', 'passcode');
+    passcodeEl.appendChild(el);
+  }
+  passcodeEl.removeAttribute('class');
+}
+
+function setPasscodeDisplay(letter) {
+  if (!passcode.includes(letter)) return;
+
+  let result = [];
+  let i = -1
+  do {
+    i = passcode.indexOf(letter, ++i);
+    if (i != -1) result.push(i);
+  } while (i != -1);
+
+  if (result.length) {
+    const elements = Array.from(passcodeEl.children);
+
+    result.forEach(i => {
+      elements[i].textContent = letter;
+      console.log(`*** ${i} => ${letter}`);
+    });
+  }
+  render();
+}
+
+function readPasscodeDisplay() {
+  let text = "";
+
+  const elements = Array.from(passcodeEl.children);
+  elements.forEach(el => {
+    text += el.textContent;
+  });
+
+  return text;
 }
