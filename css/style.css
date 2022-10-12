@@ -1,53 +1,46 @@
 * {
   box-sizing: border-box;
-
 }
 
+body {
+  background-image: url("/images/spaceman.jpeg");
+  background-position: center center;
+  background-size: cover;
+  height: 95vh;
+  font-family: monospace, Sans-Serif;
+}
 
-h1, h2, h3, h4, .terminal, .btn, .container > button {
-  color: white;
-  background-color: black;
+h1, h4 {
+  color: greenyellow;
+}
+
+.btn, button {
+  color: greenyellow;
+  background-color: #333333;
 }
 
 h1 {
   text-align: center;
 }
 
-h1#img {
-  margin: 110px 0px 110px 0px;
-}
-
 h4 {
   margin: 20px;
-}
-
-body {
-  /* https://images.unsplash.com/photo-1621198777376-d776b7725a93?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1035&q=80 */
-  background-image: url("/images/starry-background.jpg");
-  background-position: center center;
-  background-size: 100% 100%;
-  height: 100vh;
-  font-family: monospace, Sans-Serif;
 }
 
 div#control-panel {
   margin: 20px;
   padding: 10px;
   text-align: left;
-  color: white;
+  color: greenyellow;
   background-color: #222222;
 }
 
 div#control-panel h1,
-div#control-panel h2,
-div#control-panel h3,
 div#control-panel h4,
 div#control-panel div {
   margin: 0;
   padding: 5px;
   text-align: left;
-  color: white;
-  background-color: #222222;
 }
 
 span#timer {
@@ -64,7 +57,7 @@ span#timer {
 
 div#control-panel div#passcode {
   margin: 10px;
-  padding: 5px;
+  padding: 2px;
   color: greenyellow;
   background-color: #151515;
 }
@@ -72,4 +65,23 @@ div#control-panel div#passcode {
 .input-display-collapsed {
   min-height: 0;
   display: none;
+}
+
+.bottom{
+  position: fixed;
+  bottom:0;
+  width:100%;
+  background: #00000000;
+}
+
+span.passcode {
+  display: inline-block;
+  margin: 2px;
+  border-width: 1px;
+  border-color: green;
+  min-height: 16px;
+  min-width: 16px;
+  color: white;
+  background-color: green;
+  text-align: center;
 }

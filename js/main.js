@@ -77,7 +77,7 @@ function init() {
 
   // Initialize game state.
   initializePasscode();
-  initializePasscodeDisplay(passcode);
+  initializePasscodeDisplay();
   initializeButtons();
 
   // Set the game interval to periodically re-render until either:
@@ -127,7 +127,7 @@ function render() {
       break;
 
     case GameState.GAME_OVER:
-      status = 'TIME OUT!';
+      status = timer.remaining > 0 ? 'MISSION SUCCESS!' : 'MISSION FAILURE!';
       break;
 
     default:
@@ -150,6 +150,7 @@ function endGame() {
   const win = timer.remaining > 0 ? true : false;
   console.log('Win: ' + win); // clear control-panel and say 'MISSION SUCCESS
                               // EMERGENCY RETRIEVAL SYSTEM ACTIVATED'
+  render();
 }
 
 /** Randomly choose one of the moons of Jupiter. */
@@ -158,12 +159,13 @@ function initializePasscode() {
 }
 
 /** Clear previous display and add elements for displaying passcode letters. */
-function initializePasscodeDisplay(passcode) {
+function initializePasscodeDisplay() {
   passcodeEl.replaceChildren();
 
   for (let i = 0; i < passcode.length; i++) {
-    const el = document.createElement('button');
+    const el = document.createElement('span');
     el.setAttribute('class', 'passcode');
+    el.textContent = '_';
     passcodeEl.appendChild(el);
   }
   passcodeEl.removeAttribute('class');
@@ -214,7 +216,7 @@ function setState(newState) {
   if (STATE_TRANSITIONS[state].includes(newState)) {
     state = newState;
   } else {
-    throw new Error(`ERROR: invalid state transition attempted from ${state} to ${newState}`);
+    console.error(`ERROR: invalid state transition: ${state} => ${newState}`);
   }
 }
 
@@ -226,8 +228,8 @@ function setPasscodeDisplay(letter) {
   let i = -1
   do {
     i = passcode.indexOf(letter, ++i);
-    if (i != -1) result.push(i);
-  } while (i != -1);
+    if (i !== -1) result.push(i);
+  } while (i !== -1);
 
   if (result.length) {
     const elements = Array.from(passcodeEl.children);
@@ -237,7 +239,6 @@ function setPasscodeDisplay(letter) {
       console.log(`*** ${i} => ${letter}`);
     });
   }
-  render();
 }
 
 /** Returns the current string value of the passcode display */
