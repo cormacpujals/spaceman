@@ -48,7 +48,7 @@ span#timer {
 }
 
 .timer-normal {
-  color: greenyellow;
+  color: green;
 }
 
 .timer-warning {
@@ -71,14 +71,11 @@ div#control-panel div#passcode {
   position: fixed;
   bottom:0;
   width:100%;
-  background: #00000000;
 }
 
 span.passcode {
   display: inline-block;
   margin: 2px;
-  border-width: 1px;
-  border-color: green;
   min-height: 16px;
   min-width: 16px;
   color: white;

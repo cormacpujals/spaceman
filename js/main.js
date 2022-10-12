@@ -42,7 +42,7 @@ let passcode;
 
 /** The game timer (reset for each new game). */
 let timer = {
-  maxTime: 1000 * 120, // total game length (ms).
+  maxTime: 1000 * 180, // total game length (ms).
   period: 1000, // how often the game updates and renders (ms).
   remaining: undefined, // time remaining until game ends (seconds).
   intervalId: undefined, // the interval timer ID
@@ -50,16 +50,16 @@ let timer = {
 
 /*----- cached elements  -----*/
 
-/** button for starting a new game */
+/** Button for starting a new game */
 const activateBtn = document.getElementById('activate');
 
-/** displays status (time remaining) */
+/** Displays status (time remaining) */
 const timerEl = document.getElementById('timer');
 
-/** displays the alphabetic buttons panel for entering passcode */
+/** Displays the alphabetic buttons panel for entering passcode */
 const buttonsEl = document.getElementById('buttons');
 
-/** displays letters in passcode, if present, as user clicks alphabet buttons */
+/** Displays letters in passcode, if present, as user clicks alphabet buttons */
 const passcodeEl = document.getElementById('passcode');
 
 /*----- event listeners -----*/
@@ -69,7 +69,7 @@ activateBtn.addEventListener('click', init);
 /*----- functions -----*/
 
 /**
- * initialize a new game and start game loop
+ * Initialize a new game and start game loop
  */
 function init() {
   console.log('Initializing new game');
@@ -115,7 +115,7 @@ function render() {
       const seconds = timer.remaining;
       status = '';
 
-      if (seconds < 16) {
+      if (seconds < 60) {
         timerEl.setAttribute('class', 'timer-warning');
       }
 
@@ -127,7 +127,7 @@ function render() {
       break;
 
     case GameState.GAME_OVER:
-      status = timer.remaining > 0 ? 'MISSION SUCCESS!' : 'MISSION FAILURE!';
+      status = timer.remaining > 0 ? `MISSION SUCCESS! ${timer.remaining} second(s) remaining` : 'MISSION FAILURE!';
       break;
 
     default:
@@ -220,21 +220,22 @@ function setState(newState) {
   }
 }
 
-/** If the letter is present in the passcode, this will display it. */
+/** If the letter isn't present in the passcode, decrement timer by 10,
+ * otherwise, display it. */
 function setPasscodeDisplay(letter) {
-  if (!passcode.includes(letter)) return;
+  if (!passcode.includes(letter)) return timer.remaining -= 10;
 
-  let result = [];
+  let buffer = [];
   let i = -1
   do {
     i = passcode.indexOf(letter, ++i);
-    if (i !== -1) result.push(i);
+    if (i !== -1) buffer.push(i);
   } while (i !== -1);
 
-  if (result.length) {
+  if (buffer.length) {
     const elements = Array.from(passcodeEl.children);
 
-    result.forEach(i => {
+    buffer.forEach(i => {
       elements[i].textContent = letter;
       console.log(`*** ${i} => ${letter}`);
     });
