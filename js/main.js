@@ -1,6 +1,7 @@
 /*----- constants -----*/
 
-const moons = [
+/** The list of all possible passcodes (moons of Jupiter). */
+const MOONS = [
   'Io', 'Europa', 'Ganymede', 'Adrastea', 'Aitne', 'Amalthea', 'Ananke',
   'Arche', 'Autonoe', 'Aoede', 'Callirrhoe', 'Callisto', 'Carme', 'Carpo',
   'Chaldene', 'Cyllene', 'Dia', 'Eirene', 'Elara', 'Erinome', 'Ersa', 'Euanthe',
@@ -12,51 +13,58 @@ const moons = [
   'Thyone', 'Valetudo'
 ];
 
-/*----- state variables -----*/
-
-// Our game states. Set states with setState().
-const InitialState = 'INITIAL';
-const StartState = 'START';
-const InPlayState = 'IN-PLAY';
-const GameOverState = 'GAME-OVER';
-
-const stateTransitions = {
-  [InitialState]: [StartState],
-  [StartState]: [InPlayState],
-  [InPlayState]: [GameOverState],
-  [GameOverState]: [InitialState],
+/** Game states. Set current state with setState(). */
+const GameState = {
+  INITIAL: 'INITIAL',
+  START: 'START',
+  IN_PLAY: 'IN-PLAY',
+  GAME_OVER: 'GAME-OVER',
 }
 
+/** Valid transitions (state => possible states array) used by setState(). */
+const STATE_TRANSITIONS = {
+  [GameState.INITIAL]: [GameState.START],
+  [GameState.START]: [GameState.IN_PLAY],
+  [GameState.IN_PLAY]: [GameState.GAME_OVER],
+  [GameState.GAME_OVER]: [GameState.INITIAL],
+}
+
+/*----- state variables -----*/
+
+/** Current game state. */
 let state;
 
-// Starting timeout until game over.
-const timeout = 1000 * 60;
-
-// remaining seconds (not ms), initialized by startGameLoop()
-let remaining;
-
-// Update the screen every second.
-const period = 1000;
-
-// Interval created by startGameLoop().
-let timer;
-
-// Status is updated based on the timer.
+/** The status message (how many seconds remaining). */
 let status;
 
-// Passcode updated for each new round.
-let passcode = '';
+/** Passcode randomly selected from MOONS list for each new round. */
+let passcode;
+
+/** The game timer (reset for each new game). */
+let timer = {
+  maxTime: 1000 * 60, // total game length (ms).
+  period: 1000, // how often the game updates and renders (ms).
+  remaining: undefined, // time remaining until game ends (seconds).
+  intervalId: undefined, // the interval timer ID
+}
 
 /*----- cached elements  -----*/
 
+/** button for starting a new game */
 const activateBtn = document.getElementById('activate');
+
+/** displays status (time remaining) */
 const timerEl = document.getElementById('timer');
+
+/** displays the alphabetic buttons panel for entering passcode */
 const buttonsEl = document.getElementById('buttons');
+
+/** displays letters in passcode, if present, as user clicks alphabet buttons */
+const passcodeEl = document.getElementById('passcode');
 
 /*----- event listeners -----*/
 
 activateBtn.addEventListener('click', init);
-// letter btn listener is in the function that initializes them
 
 /*----- functions -----*/
 
@@ -64,29 +72,66 @@ activateBtn.addEventListener('click', init);
  * activate "starts" a new game and requires the user to guess a passcode.
  */
 function init() {
-  console.log('starting new game');
-  setState(InitialState);
+  console.log('Starting new game');
+  setState(GameState.INITIAL);
+
+  // Initialize game state.
   initializePasscode();
   initializePasscodeDisplay(passcode);
   initializeButtons();
-  startGameLoop();
+
+  // Set the game interval to periodically re-render until either:
+  // - player guesses the correct passcode and ends the game
+  // - timer times out
+  timer.intervalId = setInterval(() => {
+    --timer.remaining;
+    if (timer.remaining <= 0) {
+      endGame();
+    }
+    render();
+  }, timer.period);
+
+  // Set start state and render
+  setState(GameState.START);
+  timer.remaining = timer.maxTime / 1000; // display seconds
+  render();
+
+  // Transition to play state now.
+  setState(GameState.IN_PLAY);
 }
 
+/**
+ * Update UI to indicate win/lose state and clear timer interval.
+ */
 function endGame() {
   // explicitly dispose timer
-  clearInterval(timer);
-  timer = undefined;
+  clearInterval(timer.intervalId);
+  timer.intervalId = undefined;
 
-  setState(GameOverState);
-  const win = remaining > 0 ? true : false;
+  setState(GameState.GAME_OVER);
+  const win = timer.remaining > 0 ? true : false;
   console.log('Win: ' + win); // clear control-panel and say 'MISSION SUCCESS
                               // EMERGENCY RETRIEVAL SYSTEM ACTIVATED'
 }
 
+/** Randomly choose one of the moons of Jupiter. */
 function initializePasscode() {
-  passcode = moons[Math.floor(Math.random() * moons.length)].toUpperCase();
+  passcode = MOONS[Math.floor(Math.random() * MOONS.length)].toUpperCase();
 }
 
+/** Clear previous display and add elements for displaying passcode letters. */
+function initializePasscodeDisplay(passcode) {
+  passcodeEl.replaceChildren();
+
+  for (let i = 0; i < passcode.length; i++) {
+    const el = document.createElement('button');
+    el.setAttribute('class', 'passcode');
+    passcodeEl.appendChild(el);
+  }
+  passcodeEl.removeAttribute('class');
+}
+
+/** Dynamically create the alphabet buttons and attach click handler */
 function initializeButtons() {
   buttonsEl.replaceChildren();
 
@@ -107,6 +152,7 @@ function initializeButtons() {
   });
 }
 
+/** Handle alphabet button presses */
 function onPasscodeButton(evt) {
   const btn = evt.target;
   const ch = btn.innerText;
@@ -121,41 +167,18 @@ function onPasscodeButton(evt) {
 }
 
 /**
- * The game loop runs until either
- * -the player guesses the correct passcode and ends the game
- * -the timer times out
- * render updates the state determined by game loop
- */
-function startGameLoop() {
-  setState(StartState);
-  remaining = timeout / 1000; // display seconds
-  render();
-
-  // Enter InPlayState and start game loop.
-  setState(InPlayState);
-  timer = setInterval(() => {
-    --remaining;
-    // console.log("seconds remaining:", remaining);
-    if (remaining <= 0) {
-      endGame();
-    }
-    render();
-  }, period);
-}
-
-/**
- * Updates UI to reflect current state (set by startGameLoop)
+ * Update UI to reflect current state.
  */
 function render() {
   switch (state) {
-    case InitialState:
-    case StartState:
+    case GameState.INITIAL:
+    case GameState.START:
       timerEl.setAttribute('class', 'timer-normal');
-      status = `${remaining} seconds`;
+      status = `${timer.remaining} seconds`;
       break;
 
-    case InPlayState:
-      const seconds = remaining;
+    case GameState.IN_PLAY:
+      const seconds = timer.remaining;
       status = '';
 
       if (seconds < 16) {
@@ -169,7 +192,7 @@ function render() {
       }
       break;
 
-    case GameOverState:
+    case GameState.GAME_OVER:
       status = 'TIME OUT!';
       break;
 
@@ -186,31 +209,16 @@ function render() {
  * @param newState
  */
 function setState(newState) {
-  if (!state) state = GameOverState;
+  if (!state) state = GameState.GAME_OVER;
 
-  if (stateTransitions[state].includes(newState)) {
+  if (STATE_TRANSITIONS[state].includes(newState)) {
     state = newState;
   } else {
     throw new Error(`ERROR: invalid state transition attempted from ${state} to ${newState}`);
   }
 }
 
-/*----- Input Buffer Display -----*/
-
-
-const passcodeEl = document.getElementById('passcode');
-
-function initializePasscodeDisplay(passcode) {
-  passcodeEl.replaceChildren();
-
-  for (let i = 0; i < passcode.length; i++) {
-    const el = document.createElement('button');
-    el.setAttribute('class', 'passcode');
-    passcodeEl.appendChild(el);
-  }
-  passcodeEl.removeAttribute('class');
-}
-
+/** If the letter is present in the passcode, this will display it. */
 function setPasscodeDisplay(letter) {
   if (!passcode.includes(letter)) return;
 
@@ -232,6 +240,7 @@ function setPasscodeDisplay(letter) {
   render();
 }
 
+/** Returns the current string value of the passcode display */
 function readPasscodeDisplay() {
   let text = "";
 
