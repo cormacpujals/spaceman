@@ -88,8 +88,7 @@ function initializePasscode() {
 }
 
 function initializeButtons() {
-  // Don't need to reinitialize if already created.
-  // if (buttonsEl.children) return;
+  buttonsEl.replaceChildren();
 
   const iA = 'A'.charCodeAt(0);
   const iZ = 'Z'.charCodeAt(0);
@@ -202,7 +201,7 @@ const input = [];
 const passcodeEl = document.getElementById('passcode');
 
 function initializePasscodeDisplay(passcode) {
-  // if (passcodeEl.children) passcodeEl.children = [];
+  passcodeEl.replaceChildren();
 
   for (let i = 0; i < passcode.length; i++) {
     const el = document.createElement('button');
