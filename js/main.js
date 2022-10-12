@@ -69,7 +69,7 @@ activateBtn.addEventListener('click', init);
 /*----- functions -----*/
 
 /**
- * activate "starts" a new game and requires the user to guess a passcode.
+ * initialize a new game and start game loop
  */
 function init() {
   console.log('Initializing new game');
