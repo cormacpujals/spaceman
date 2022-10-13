@@ -68,9 +68,14 @@ div#control-panel div#passcode {
 }
 
 .bottom{
+
   position: fixed;
-  bottom:0;
-  width:100%;
+  bottom: 0;
+  /*top: 70vh;*/
+  /*Very dirty width.. why is the position not even when width: 100%? For some
+  for some reason it seems to be starting 8px from the border of the page
+  problem seems to be with the position/top/bottom, etc. */
+  width: 100%;
 }
 
 span.passcode {
