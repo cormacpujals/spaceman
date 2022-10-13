@@ -36,14 +36,21 @@ The timer color changes to red when there is less than a minute remaining.
 
 
 # Getting Started
-Enjoy! If you are having a hard time getting the correct answer and want to see 
-the win screen, feel free to use Chrome DevTools to see the logged the passcode.
+
 [Click to Play Spaceman!](https://cormacpujals.github.io/spaceman/)
+
+Enjoy! If you are having a hard time getting the correct answer and want to see 
+the win screen, follow these steps: 
+1. Hit 'Activate' to start the game
+2. Click any letter
+3. Open the Chrome DevTools console
+4. Prosper. The passcode will have been logged.
+
 
 # Next Steps
 
-- Add music
-- Add options for visiting different planets! I think it would be awesome if 
-teachers used this game as a resource to teach folks about our solar system.
+Here's a link to the [enhancements](https://github.com/cormacpujals/spaceman/issues) 
+I would like to make. If you have any suggestions, I would love to hear them!
+
 
 
