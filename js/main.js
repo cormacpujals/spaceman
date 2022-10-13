@@ -127,7 +127,9 @@ function render() {
       break;
 
     case GameState.GAME_OVER:
-      status = timer.remaining > 0 ? `MISSION SUCCESS! ${timer.remaining} second(s) remaining` : 'MISSION FAILURE!';
+      status = timer.remaining > 0 ?
+        `MISSION SUCCESS! ${timer.remaining} second(s) remaining` :
+        'MISSION FAILURE!';
       break;
 
     default:

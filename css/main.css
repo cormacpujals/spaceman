@@ -6,6 +6,7 @@ body {
   background-image: url("https://scontent-sjc3-1.xx.fbcdn.net/v/t1.6435-9/42889965_1993818660698004_7847523832456806400_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=DEQwWfDeLEwAX9V02dW&_nc_ht=scontent-sjc3-1.xx&oh=00_AT_4LsLp9L0crzxxOAw9Y55kBAWliNroUq0EnB9V07Z-GQ&oe=636C7754");
   background-position: center center;
   background-size: cover;
+  margin: 0;
   height: 95vh;
   font-family: monospace, Sans-Serif;
 }
@@ -71,10 +72,6 @@ div#control-panel div#passcode {
 
   position: fixed;
   bottom: 0;
-  /*top: 70vh;*/
-  /*Very dirty width.. why is the position not even when width: 100%? For some
-  for some reason it seems to be starting 8px from the border of the page
-  problem seems to be with the position/top/bottom, etc. */
   width: 100%;
 }
 
