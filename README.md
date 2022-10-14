@@ -10,7 +10,7 @@ run out of oxygen.
 # Screenshots:
 
 Read the mission memo and press 'Activate' to begin!
-<img src="https://i.imgur.com/Dzr88fO.png">
+<img src="https://i.imgur.com/DUmmlpy.png">
 
 Let's zoom in on the control-panel: One of Jupiter's moons has been randomly 
 selected as the passcode and your job is to guess which by keying in letters! 
@@ -19,7 +19,7 @@ selected as the passcode and your job is to guess which by keying in letters!
 The timer color changes to red when there is less than a minute remaining.
 <img src="https://i.imgur.com/0H0rabE.png">
 
-<img src="https://i.imgur.com/W6CpBQN.png">
+<img src="https://i.imgur.com/WECauqO.png">
 
 <img src="https://i.imgur.com/ecoW2v7.png">
 
